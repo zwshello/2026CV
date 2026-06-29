@@ -1,0 +1,71 @@
+# Target catalogue for low-altitude perception simulation.
+#
+# Each entry maps a YOLO class to a Gazebo Fuel model URI (or a local SDF
+# file fragment) plus an axis-aligned bounding box (size in metres) used by
+# the dataset collector to project ground-truth boxes back to the image.
+#
+# Sizes are conservative (slightly larger than the visual mesh) so that
+# small alignment errors still keep the projected 2D box on top of the
+# visible object. Tweak only if you observe systematic mis-aligned labels.
+
+classes:
+  - id: 0
+    name: car
+    fuel_uris:
+      - https://fuel.gazebosim.org/1.0/openrobotics/models/Hatchback
+      - https://fuel.gazebosim.org/1.0/openrobotics/models/Hatchback%20red
+      - https://fuel.gazebosim.org/1.0/openrobotics/models/Pickup
+      - https://fuel.gazebosim.org/1.0/openrobotics/models/SUV
+    aabb_size: [4.6, 1.9, 1.6]   # length, width, height (m)
+    z_offset: 0.0                # spawn z = terrain_z + z_offset
+
+  - id: 1
+    name: truck
+    fuel_uris:
+      - https://fuel.gazebosim.org/1.0/openrobotics/models/Ambulance
+      - https://fuel.gazebosim.org/1.0/openrobotics/models/DeliveryVan
+    aabb_size: [6.0, 2.4, 2.6]
+    z_offset: 0.0
+
+  - id: 2
+    name: person
+    fuel_uris:
+      - https://fuel.gazebosim.org/1.0/openrobotics/models/Standing%20person
+      - https://fuel.gazebosim.org/1.0/openrobotics/models/Walking%20person
+    aabb_size: [0.6, 0.6, 1.85]
+    z_offset: 0.0
+
+  - id: 3
+    name: cone
+    fuel_uris:
+      - https://fuel.gazebosim.org/1.0/openrobotics/models/Construction%20Cone
+    aabb_size: [0.45, 0.45, 0.75]
+    z_offset: 0.0
+
+  - id: 4
+    name: boat
+    fuel_uris:
+      - https://fuel.gazebosim.org/1.0/openrobotics/models/RoboBoat
+    aabb_size: [3.2, 1.6, 1.2]
+    z_offset: 0.2                # buoyant offset above water
+
+# Spawn area. The collector and spawner expect coordinates in the world frame
+# of `baylands`. The default rectangle covers the runway and adjacent shoreline
+# where camera coverage from a 30-80 m altitude sweep is good.
+spawn_area:
+  x_range: [-100.0, 100.0]
+  y_range: [-100.0, 100.0]
+  ground_z: 0.05                 # baylands runway is roughly flat at z=0
+  water_z: 0.0                   # used for class `boat`
+
+# How many objects to drop per session. Spawner picks classes proportional
+# to weights below; total is uniform in [min_total, max_total].
+population:
+  min_total: 8
+  max_total: 15
+  class_weights:
+    car: 4
+    truck: 1
+    person: 3
+    cone: 3
+    boat: 1

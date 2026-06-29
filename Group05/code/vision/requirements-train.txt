@@ -1,0 +1,23 @@
+# Windows-native training environment.
+#
+# Keep this file in sync with vision/setup_train_env.ps1. The two-line group
+# at the top installs PyTorch from the CUDA 12.1 wheel index (works on RTX
+# 4050 Laptop). The remainder are framework-agnostic and pull from PyPI.
+#
+# Use the helper script — it handles the extra index URL automatically:
+#     pwsh -File vision/setup_train_env.ps1
+
+# torch deps (must be installed via the extra index URL — see setup script)
+torch==2.3.1
+torchvision==0.18.1
+
+# YOLO + plotting + dataset utilities
+ultralytics>=8.2.0
+numpy>=1.26
+pyyaml>=6.0
+pillow>=10.0
+opencv-python>=4.9
+matplotlib>=3.8
+
+# Tooling
+pytest>=8.0
